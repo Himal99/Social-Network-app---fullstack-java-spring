@@ -1,0 +1,42 @@
+<div th:replace="shared/header"></div>
+
+<section class="content">
+
+    <div class="row">
+        <div class="col-md-3">
+
+            <!-- Profile Image -->
+            <div th:replace="profile/shared/about"></div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-6">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>
+                    <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
+                    <li><a href="#settings" data-toggle="tab">Settings</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div th:replace="profile/shared/activity"></div>
+                    <!-- /.tab-pane -->
+                    <div th:replace=" profile/shared/timeline "></div>
+                    <!-- /.tab-pane -->
+
+                    <div th:replace="profile/shared/setting "></div>
+                    <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+            </div>
+            <!-- /.nav-tabs-custom -->
+        </div>
+        <div class="col-md-3">
+            <div th:replace="profile/shared/suggestionfriend"></div>
+        </div>
+
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+
+</section>
+<div th:replace="shared/footer"></div>

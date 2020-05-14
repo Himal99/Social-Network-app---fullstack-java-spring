@@ -1,0 +1,51 @@
+<div id="posts-detail" class="box box-widget">
+    <div class="box-header with-border">
+        <div class="user-block">
+            <img class="img-circle" th:src="'/img/'+${post.user.profile.profileImage}" alt="User Image">
+            <span class="username"><a href="#" th:text="${post.user.username}"></a></span>
+            <span class="description">Shared publicly - <span th:text="${#dates.format(currentuser.createdDate, 'hh:mm a-YYYY-mm')}"></span> </span>
+        </div>
+        <!-- /.user-block -->
+        <div class="box-tools">
+            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Mark as read">
+                  <i class="fa fa-circle-o"></i></button>
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+        </div>
+        <!-- /.box-tools -->
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <p th:text="${post.message}"></p>
+        <!-- Attachment -->
+        <div class="attachment-block clearfix">
+
+            <!-- /.attachment-text -->
+        </div>
+        <!-- /.attachment-pushed -->
+    </div>
+    <!-- /.attachment-block -->
+
+    <!-- Social sharing buttons -->
+    <div id="post-buttons">
+
+    </div>
+</div>
+<!-- /.box-body -->
+<div id="user-comment-box" class="box-footer box-comments">
+
+    <!-- /.box-comment -->
+</div>
+<!-- /.box-footer -->
+<div class="box-footer">
+    <form action="#" method="post">
+        <img class="img-responsive img-circle img-sm" src="../webjars/adminlte/2.3.11/dist/img/user4-128x128.jpg" alt="Alt Text">
+        <!-- .img-push is used to add margin to elements next to floating images -->
+        <div class="img-push">
+            <input type="text" class="form-control input-sm" placeholder="Press enter to post comment">
+        </div>
+    </form>
+</div>
+<!-- /.box-footer -->
+</div>

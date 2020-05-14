@@ -1,0 +1,31 @@
+<div id="status-modal" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content col-md-8" style="border-radius: 8px;">
+
+            <form action="" id="status-post">
+                <div class="modal-body">
+
+                    <img class="img-responsive img-circle img-sm" th:src="'/img/'+${profile.profileImage}" alt="Alt Text"> &nbsp;&nbsp; <span><b th:text="${currentuser.username}"></b></span>
+                    <textarea name="" id="status" class="form-control" style="border: none;
+                height:150px;" placeholder="Whats's on your mind...?" required></textarea>
+                    <div class="text-center">
+                        <button class="btn btn-success btn-xs"><span class="fa fa-camera"></span></button>
+                        <span style="font-size:15px;
+                font-family: sans-serif;">Photo/Video</span> &nbsp;&nbsp;&nbsp;
+                        <button class="btn btn-primary btn-xs"><span class="fa fa-male"></span></button>
+                        <span style="font-size:15px;
+                font-family: sans-serif;">Tag Friends</span> &nbsp;&nbsp;&nbsp;
+                        <button type="submit" class="btn btn-info btn-xs">Post</button>
+
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

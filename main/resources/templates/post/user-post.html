@@ -1,0 +1,317 @@
+<div class="post" th:each="post:${posts}">
+    <div class="box box-widget">
+        <div class="box-header with-border">
+            <div class="user-block">
+                <img class="img-circle" th:src="'/img/'+${post.user.profile.profileImage}" alt="User Image">
+                <span class="username" th:text="${post.user.username}" id="user-profile" th:rel="${post.user.id}"><a
+                        href="#"></a></span>
+                <span class="description">Shared publicly - <span th:text="${#dates.format(currentuser.createdDate, 'hh:mm a-YYYY-mm')}"></span></span>
+            </div>
+            <!-- /.user-block -->
+            <div class="box-tools">
+
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+            </div>
+            <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <!-- post text -->
+            <p th:text="${post.message}"></p>
+            <!-- Attachment -->
+            <div class="attachment-block clearfix">
+
+
+                <!-- /.attachment-pushed -->
+            </div>
+            <!-- /.attachment-block -->
+
+            <!-- Social sharing buttons -->
+            <button type="button" th:rel="${post.id}" id="share-post" class="btn btn-default btn-xs"><i class="fa fa-share"></i> Share</button>
+            <button type="button" id="post-like" th:rel="${post.id}" class="btn btn-default btn-xs"><i class="fa fa-thumbs-o-up"></i> Like</button>
+
+            <a href="" th:rel="${post.id}" th:userId="${post.user.id}" id="comment-post"> view comments </a>
+        </div>
+        <!-- /.box-body -->
+        <div id="comment-box">
+            <div class="col-md-12">
+                <div class="box box-default  collapsed-box" style="border: none;">
+                    <div class="box-header with-border">
+
+
+                        <div class="box-tools pull-right">
+                            <button th:rel="${post.id}" type="button" id="comment-collapsed" class="btn btn-box-tool" data-widget="collapse">
+                      </button>
+                        </div>
+                        <!-- /.box-tools -->
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body" style="display: none;">
+                        <div id="downcomment">
+
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+
+
+        </div>
+        <!-- /.box-footer -->
+        <div class="box-footer">
+            <form action="#"></form>
+
+            <img class="img-responsive img-circle img-sm" src="../webjars/adminlte/2.3.11/dist/img/user4-128x128.jpg" alt="Alt Text">
+            <!-- .img-push is used to add margin to elements next to floating images -->
+            <div class="img-push">
+                <input type="text" class="form-control input-sm" th:rel="${post.id}" id="post-comments" placeholder="Press enter to post comment">
+            </div>
+            </form>
+        </div>
+        <!-- /.box-footer -->
+    </div>
+
+
+</div>
+<div th:include="/post/view-modal"></div>
+
+
+<script>
+    $(document).ready(function() {
+
+
+        $('.post').on('click', '#share-post', function() {
+            var $id = $(this).attr('rel');
+            $('#comment-collapsed').click();
+            $.get('/account/commentDown/' + $id, function(data) {
+                $('#downcomment').html(data);
+                console.log(data);
+
+
+            })
+
+
+
+        })
+
+
+        $('.post').on('click', '#user-comment-button', function() {
+
+
+            var $id = $(this).attr('rel');
+            $.get('/post/comments/' + $id, function(data) {
+
+                $.each(data, function(index, row) {
+                    console.log(row)
+                    console.log(row.user.username)
+
+
+                })
+
+
+            })
+
+            return false;
+        })
+
+
+        // post likes
+        $('.post').on('click', '#post-like', function() {
+            var $id = $(this).attr('rel');
+
+
+            $.post('/post/likes/' + $id, function(data) {
+
+
+            })
+
+
+            return false;
+        })
+
+
+        // user-details
+
+        $('.post').on('click', '#user-profile', function() {
+            $("#profile-modal").modal();
+            var $id = $(this).attr('rel');
+            var followme = $("#profile-modal").find('#follow-user');
+
+            $('#profile-modal').find('#follow-button').remove();
+            $('#profile-modal').find('#unfollow-button').remove();
+
+            $.get('/post/userprofile/' + $id, function(data) {
+                $.each(data, function(index, row) {
+
+                    $("#profile-modal").find('#user-name').html(row.firstname);
+                    $("#profile-modal").find('#user-address').html(row.address);
+                    $("#profile-modal").find('#user-education').html(row.education);
+                    $("#profile-modal").find('#user-description').html(row.description);
+                    $userid = row.user.username;
+                    var $userid;
+                    console.log(row.firstname);
+                    var userid = row.user.id;
+                    console.log(userid);
+
+                    $.get('/follower/checkfollower/' + userid, function(data) {
+                        if (data === true) {
+
+                            $('<div class="col-md-6"> <a href="#" follower="' + $userid + '" followId="' + userid + '" id="follow-button" class="btn btn-success btn-block" ">' +
+                                '<b>following</b></a></div><div class="col-md-6">' +
+                                ' <a href="#" follower="' + $userid + '" followId="' + userid + '" id="unfollow-button" class="btn btn-danger btn-block">' +
+                                '<b>Unfollow</b></a></div>').appendTo(followme);
+
+                        } else {
+
+                            $('<div class="col-md-12"> <a href="#" follower="' + $userid + '" followId="' + userid + '" id="follow-button" class="btn btn-primary btn-block"><b>Follow</b></a></div>').appendTo(followme);
+
+                        }
+                    })
+                })
+
+            })
+            return false;
+        })
+
+        // save following
+        // refreshment baki chha========================================||||=========
+        $("#profile-modal").on('click', '#follow-button', function() {
+            var userName = $(this).attr('follower');
+            var $userId = $(this).attr('followId');
+            console.log($userId);
+
+            $.post('/follower/savefollow/', {
+                'username': userName,
+                'id': $userId
+            }, function(data) {
+
+                $.get('/account/about/', function(data) {
+                    $('#profile-modal').modal('hide');
+                    $('#about').html(data);
+
+
+                })
+            });
+
+            $('#profile-modal').modal('hide');
+            return false;
+
+        });
+
+
+        // unfollow User
+
+        $('#profile-modal').on('click', '#unfollow-button', function() {
+
+            var $userId = $(this).attr('followId');
+            if (confirm('Are you sure to Unfollow ?')) {
+
+                var $userId = $(this).attr('followId');
+                $.post('/follower/deletefollower/', {
+                    'followingId': $userId
+                }, function(data) {
+                    $('#profile-modal').modal('hide');
+                })
+
+            }
+            return false;
+
+        })
+
+        // comment-a-post
+        $('.post').on('keyup', "#post-comments", function(e) {
+
+
+            var $this = $(this);
+            if (e.keyCode == 13) {
+
+
+                var comment = $(this).val();
+                console.log(comment)
+                var $id = $(this).attr('rel');
+                console.log($id)
+                $.post('/post/comment/' + $id, {
+                    'comment': comment
+                }, function(data) {
+
+                })
+                $this.val('');
+
+
+
+            }
+            return false;
+        });
+        // show-comment
+        // $(".post").on('click', '#comment-post', function() {
+
+        //         var $userId = $(this).attr('userId');
+
+
+        //         $.get('/post/userPost/' + $userId, function(data) {
+        //             console.log(data);
+        //             console.log(data.message)
+        //             console.log(data.user.username)
+
+
+        //             var postheader = $modal.find('#post-header');
+        //             var headerpost = $modal.find('#header-post');
+        //             postheader.html('');
+        //             headerpost.html('');
+        //             $('<div class="box-header with-border"><div class="user-block"> <img class="img-circle" ' +
+        //                 'src="../webjars/adminlte/2.3.11/dist/img/user1-128x128.jpg" alt="User Image">' +
+        //                 ' <span class="username"><a href="#" id="post-username">' + data.user.username + '</a></span>' +
+        //                 ' <span class="description">Shared publicly -' + data.createdDate + '</span></div></div>').appendTo(postheader);
+
+        //             $('<p>' + data.message + '</p>').appendTo(headerpost);
+
+        //         })
+
+
+        //         var $modal = $("#detail-modal");
+        //         $modal.find('#user-comment').html('');
+        //         var modalcomment = $modal.find('#user-comment');
+        //         modalcomment.html('');
+
+        //         var postbuttons = $modal.find('#post-buttons');
+        //         postbuttons.html('');
+        //         $modal.modal();
+        //         var $id = $(this).attr('rel');
+        //         $.get('/post/comments/' + $id, function(data) {
+        //             console.log(data.length)
+        //             $(' <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> Share</button>' +
+        //                 '</button> <span class="pull-right text-muted">0 likes - ' + data.length + ' comments</span>').appendTo(postbuttons);
+
+
+
+        //             $.each(data, function(index, row) {
+
+
+
+        //                 var $comment = $(' <div class="box-comment">  <!-- User image -->' +
+        //                     '  <img class="img-circle img-sm" src="../webjars/adminlte/2.3.11/dist/img/user3-128x128.jpg"' +
+        //                     'alt="User Image"> <div class="comment-text"> <span class="username">' +
+        //                     '' + row.user.username + '<span class="text-muted pull-right">8:03 PM Today</span>' +
+        //                     ' </span> <!-- /.username --> ' + row.comment + '</div>' +
+        //                     ' <!-- /.comment-text --> </div>').appendTo(modalcomment);
+        //                 var commentbox = $('#comment-box');
+
+
+
+        //             })
+
+
+        //         })
+        //         return false;
+        //     })
+        //     // baki x
+        //     // $.getJSON('/account/profilepic', function(data) {
+        //     //     console.log(data);
+
+        // // })
+
+    })
+</script>

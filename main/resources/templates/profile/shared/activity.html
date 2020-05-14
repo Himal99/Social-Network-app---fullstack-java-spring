@@ -1,0 +1,153 @@
+<div class="active tab-pane" id="activity">
+    <!-- Post -->
+    <!-- <div class="user-block">
+        <form action="/post/status" method="post">
+            <textarea name="message" class="form-control" style="height: 100px;" id="status-message" placeholder="Whats on your mind"></textarea>
+        </form>
+        <br>
+    </div> -->
+
+    <div style="height: 100px;">
+
+        <!-- /.box-footer -->
+        <div class="box-footer" style="
+        border-radius: 20px; background-color:#fcfcfc">
+            <form action="#"></form>
+
+            <img class="img-responsive img-circle img-sm" th:src="'/img/'+${profile.profileImage}" alt="Alt Text">
+            <!-- .img-push is used to add margin to elements next to floating images -->
+            <div class="img-push">
+                <input type="text" class="form-control input-sm" id="status-message" placeholder="What's on your mind ...?" style="border-radius: 18px;
+                background-color:#fafafa; height: 33px;">
+
+            </div>
+            <hr>
+            <div class="text-center">
+                <button class="btn btn-success" style="height: 32px;;"><span class="fa  fa-camera"></span></button>&nbsp;<span style="font-size:20px;
+                font-family: sans-serif;">Photo/Video</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-primary" style="height: 32px;;"><span class="fa  fa-male"></span></button>&nbsp;<span style="font-size:20px;
+                font-family: sans-serif;">Tag Friends</span>
+
+            </div>
+            <hr>
+            </form>
+        </div>
+
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+
+    <div class="post">
+
+        <div id="user-post">
+            <div th:replace="post/user-post"></div>
+        </div>
+        <!-- /.row -->
+
+
+
+
+    </div>
+    <!-- /.post -->
+</div>
+<div th:include="post/statusmodal"></div>
+<script>
+    $(document).ready(function() {
+        $("#status-message").on('click', function() {
+            $('#status-modal').modal();
+
+
+        })
+
+        // post status
+        $('#status-post').on('submit', function() {
+                var message = $('#status').val();
+                $.post('/post/status/', {
+                    'message': message
+                }, function(data) {
+                    $('#status-modal').modal('hide');
+                })
+
+            })
+            // post-status
+            // $("#status-message").on('keyup', function(e) {
+
+        //         var $this = $(this);
+        //         if (e.keyCode == 13) {
+        //             $.post('/post/status', {
+        //                 'message': $this.val()
+        //             }, function(data) {
+
+        //                 console.log($this.val());
+        //                 $this.val('');
+        //                 userpost();
+        //             })
+        //         }
+        //         return false;
+        //     })
+        // show comment
+        $('.post').on('click', '#comment-post', function() {
+
+            console.log($(this).attr('rel'));
+            var $id = $(this).attr('rel');
+
+
+            $.get('/refresh/viewDetail/' + $id, function(data) {
+                $('#user-post').html(data);
+
+
+
+                var commentbox = $('#user-comment-box');
+                $.get('/account/comments/' + $id, function(data) {
+                    console.log(data.length)
+                    console.log(data);
+                    var postbuttons = $('#post-buttons');
+                    $(' <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> Share</button>' +
+                        '<button type="button" class="btn btn-default btn-xs"><a href="/account">back</a> </button>' +
+                        '</button> <span class="pull-right text-muted">0 likes - ' + data.length + ' comments</span>').appendTo(postbuttons);
+
+
+
+                    $.each(data, function(index, row) {
+
+
+
+                        var $comment = $(' <div class="box-comment">  <!-- User image -->' +
+                            '  <img class="img-circle img-sm" src="../webjars/adminlte/2.3.11/dist/img/user3-128x128.jpg"' +
+                            'alt="User Image"> <div class="comment-text"> <span class="username">' +
+                            '' + row.user.username + '<span class="text-muted pull-right">8:03 PM Today</span>' +
+                            ' </span> <!-- /.username --> ' + row.comment + '</div>' +
+                            ' <!-- /.comment-text --> </div>').appendTo(commentbox);
+
+
+
+
+                    })
+
+
+                })
+            })
+
+
+
+            return false;
+        });
+
+
+
+        function userpost() {
+            $.get('/post', function(data) {
+                $("#user-post").html(data);
+            })
+            return false;
+        }
+
+
+
+    })
+</script>

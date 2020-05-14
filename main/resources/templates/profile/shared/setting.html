@@ -1,0 +1,108 @@
+<div class="tab-pane" id="settings">
+    <form class="form-horizontal" id="profile-form" action="/account">
+        <div class="form-group">
+            <label for="firstname" nam class="col-sm-2 control-label">First Name</label>
+
+            <div class="col-sm-10">
+                <input type="text" name="firstname" class="form-control" id="firstname" th:value="${profile.firstname}" placeholder="Name" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="lastname" class="col-sm-2 control-label">Last Name</label>
+
+            <div class="col-sm-10">
+                <input type="text" name="lastname" class="form-control" id="lastname" th:value="${profile.lastname}" placeholder="Email" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputName" class="col-sm-2 control-label">DOB</label>
+
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="dateOfBirth" th:value="${profile.dateOfBirth}" id="inputName" placeholder="Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputName" class="col-sm-2 control-label">Description</label>
+
+            <div class="col-sm-10">
+                <textarea name="description" class="form-control" id="" th:text="${profile.description}"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputName" class="col-sm-2 control-label">Gender</label>
+
+            <div class="col-sm-10">
+                <label><input type="radio" name="gender" value="male" th:checked="${profile.gender=='male'}">Male</label>
+                <label><input type="radio" name="gender" value="female" th:checked="${profile.gender=='female'}">Female</label>
+                <label><input type="radio" name="gender" value="other" th:checked="${profile.gender=='other'}">Other</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputName" class="col-sm-2 control-label">Address</label>
+
+            <div class="col-sm-10">
+                <input type="text" name="address" class="form-control" th:value="${profile.address}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputName" class="col-sm-2 control-label">Education</label>
+
+            <div class="col-sm-10">
+                <input type="text" name="education" class="form-control" th:value="${profile.education}">
+            </div>
+        </div>
+        <div class="form-group">
+            <a href="#" class="btn btn-primary"><label for="file" style="cursor: pointer;"> profile picture</label></a>
+            <input type="file" name="file" accept="*" id="file" style="display: none" />
+            <div class="help-block" id="error_file"></div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" id="saveme" class="btn btn-danger">Save</button>
+            </div>
+        </div>
+
+
+    </form>
+</div>
+<script>
+    $(document).ready(function() {
+        $("#settings").on("click", '#saveme', function() {
+
+
+            var file = $("#file").val();
+            // Get form
+            var form = $('#profile-form')[0];
+            var data = new FormData(form);
+
+            //                alert(data);
+            var str = JSON.stringify(data);
+
+            //               console.log(data);
+
+
+
+
+            $.ajax({
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                data: data,
+                url: "/account/saveprofile",
+                processData: false, //prevent jQuery from automatically transforming the data into a query string
+                contentType: false, // tell jQuery not to set contentType
+                cache: false,
+                success: function(data) {
+
+                },
+                error: function(e) {
+
+                }
+            });
+
+            return false;
+        });
+
+    })
+</script>
